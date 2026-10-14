@@ -49,7 +49,7 @@ const mc = (q) => `
   ${head(q)}
   <div class="q-body">
     <div class="opts${q.optCols === 2 ? ' c2' : ''}">${q.options.map((o, i) => `<div class="opt${i === q.answer ? ' right' : ''}"><span class="ol">${LETTERS[i]}</span><span>${o}</span></div>`).join('')}</div>
-    ${helpBox(q.help)}
+    ${helpBox(q.help, q.help && q.help.rows.map((r) => r[1]).join(' ').replace(/<[^>]+>/g, '').length < 70 ? 'inline tagside' : 'inline')}
   </div>
 </div>`;
 
@@ -113,12 +113,16 @@ const sa = (q) => {
   let parts = q.parts.map((p, i) => part(p, i, many)).join('');
   if (q.partsRow) parts = `<div class="parts-row">${parts}</div>`;
   const mainFig = q.figPos === 'main' ? `<div class="mainfig">${q.fig}</div>` : '';
+  const endFig = q.figPos === 'mainEnd' ? `<div class="mainfig end">${q.fig}</div>` : '';
+  if (endFig) sideFig = '';
   if (mainFig) sideFig = '';
   const pre = (q.order ? orderBoxes(q.order) : '') + (q.table ? saTable(q.table) : '');
   const helpTop = q.helpPos === 'top';
-  const helpInMain = q.valueTable || helpTop;
-  const main = `<div class="q-main">${helpTop ? helpBox(q.help, 'wide') : ''}${mainFig}${pre}${parts}${q.valueTable ? helpBox(q.help, 'wide') : ''}</div>`;
-  const side = (sideFig || (q.help && !helpInMain)) ? `<div class="q-side">${sideFig}${helpInMain ? '' : helpBox(q.help, '')}</div>` : '';
+  const helpBottom = q.valueTable && !endFig;
+  const helpInMain = helpBottom || helpTop;
+  const main = `<div class="q-main">${helpTop ? helpBox(q.help, 'wide') : ''}${mainFig}${pre}${parts}${endFig}${helpBottom ? helpBox(q.help, 'wide') : ''}</div>`;
+  const sideHelp = helpInMain ? '' : helpBox(q.help, '');
+  const side = (sideFig || sideHelp) ? `<div class="q-side">${q.helpFirst ? sideHelp + sideFig : sideFig + sideHelp}</div>` : '';
   const grow = q.grow || q.marks;
   return `
 <div class="q sa" data-q="${q.n}" style="flex-grow:${grow}">
@@ -210,7 +214,7 @@ const cover = () => `
     <div>
       <p class="cv-h">What is in this test</p>
       <table class="cv-table">
-        <tr><th></th><th>Section and topics</th><th class="n">Questions</th><th class="n">Marks</th><th class="n">Time</th><th style="text-align:right">Your mark</th></tr>
+        <tr><th></th><th>Section and topics</th><th class="n">Questions</th><th class="n">Marks</th><th class="n">Time</th><th style="text-align:right">Marker use</th></tr>
         ${sections.map((s) => `<tr><td class="sl"><b>${s.id}</b></td><td><b>${s.title}</b><br><span class="tp">${s.topics}</span></td><td class="n">${s.first}–${s.last}</td><td class="n"><b>${s.marks}</b></td><td class="n">${s.time} min</td><td class="mk"><i></i>/ ${s.marks}</td></tr>`).join('')}
         <tr class="total"><td></td><td>Total</td><td class="n">1–${n}</td><td class="n">${TOTAL}</td><td class="n">${TIME} min</td><td class="mk"><i></i>/ ${TOTAL}</td></tr>
       </table>
@@ -220,7 +224,7 @@ const cover = () => `
         <p class="cv-h">Instructions</p>
         <ul class="cv-steps">
           <li><i>1</i><span>Use a <b>blue or black pen</b>. Use a pencil and ruler for graphs and diagrams.</span></li>
-          <li><i>2</i><span><b>Answer every question.</b> Write your answer on the <b>Answer</b> line.</span></li>
+          <li><i>2</i><span><b>Answer every question.</b> Write your answer on the <b>Answer</b> line, or in the table, box or graph.</span></li>
           <li><i>3</i><span><b>Show your working.</b> You can get marks for working, even if your answer is wrong.</span></li>
           <li><i>4</i><span><b>Multiple choice:</b> circle <b>one</b> letter, A, B, C or D.</span></li>
           <li><i>5</i><span>Watch the clock. Each section has a <b>suggested time</b>.</span></li>
@@ -229,7 +233,7 @@ const cover = () => `
       <div class="cv-help">
         <p class="cv-h">Stuck? Look for HELP</p>
         <p style="font-size:9.5pt">Many questions have a <b>HELP</b> box. It gives you the <b>formula</b> and a worked <b>example</b>, like this:</p>
-        ${helpBox({ rows: [['Formula', 'Area of a rectangle = length × width'], ['Example', 'Length 5 cm, width 3 cm: 5 × 3 = 15 cm²']] }, '')}
+        ${helpBox({ rows: [['Formula', 'Speed = distance ÷ time'], ['Example', '100 km in 2 hours: 100 ÷ 2 = 50 km/h']] }, '')}
       </div>
     </div>
     <div class="cv-stop">Do not turn over until your teacher tells you to start. <span>Good luck!</span></div>
@@ -253,15 +257,15 @@ const NOTES = {
   'Mark-up and profit': '(b) Follow-through from (a): accept selling price − 7.60.',
   'Gross and net pay': '(b) Follow-through: accept their (a) − 165.09.',
   'Compound interest': '(b) Follow-through: accept their (a) − 5000. Accept $5624.32 rounded to $5624.',
-  'Circumference and area of a circle': 'Accept 2 d.p. (18.85, 28.27) or answers using π ≈ 3.14 (18.84, 28.26).',
+  'Circumference and area of a circle': 'Also accept 18.85 and 28.27 (2 d.p.), or 18.84 and 28.26 (π ≈ 3.14).',
   'Surface area of a prism': '1 mark: both rows correct (20, 40 and 8, 16). 1 mark: total 136 cm².',
-  'Volume and capacity of a cylinder': 'Accept 75.40 or 75 (2 d.p. or whole). (b) Follow-through from (a).',
+  'Volume and capacity of a cylinder': 'Also accept 75.40 or 75. (b) Follow-through: same number as (a), in mL.',
   'Mean, median and range': 'Order: 1, 3, 3, 5, 8, 9, 13.',
-  'Frequency tables, histograms and shape': '(a) 20  (b) 9 ÷ 20 × 100 = 45%  (c) heights 3 and 2, touching  (d) skewed.',
+  'Frequency tables, histograms and shape': '(a) 20  (b) columns of height 3 and 2, touching  (c) 9 ÷ 20 × 100 = 45%  (d) skewed. (c) Follow-through from their total.',
   'Probability': '',
   'Table of values and graphing a line': '(a) 2 marks: all four correct; 1 mark: two or three correct. (b) Follow-through from their table.',
   'Pythagoras’ theorem': '1 mark: 6² + 8² = 100 (or c² = 100). 1 mark: c = 10 cm.',
-  'Trigonometry: finding a side': '1 mark: x = 8 × tan 35°. 1 mark: 5.6 cm. (Radians mode gives −3.8: 1 mark for working.)',
+  'Trigonometry: finding a side': '1 mark: x = 8 × tan 35°. 1 mark: 5.6 cm. (A calculator in radians mode gives 3.8, in gradians mode 4.9: 1 mark for the working.)',
   'Solving equations': 'Accept any correct method, or the answer checked by substitution.',
 };
 
@@ -292,7 +296,7 @@ const guidePages = () => {
         <li>Give full marks for a correct answer, even with no working.</li>
         <li>Where a part uses an earlier answer, follow through: mark the method using the student’s earlier answer.</li>
         <li>Do not take marks off for a missing $ sign or unit if the number is correct; note it for feedback.</li>
-        <li>Rounding: accept 1 or 2 decimal places unless the question asks for a set number of places.</li>
+        <li>Rounding: give full marks for a correct value rounded to a different number of decimal places than asked (for example 18.85 instead of 18.8); note it for feedback.</li>
       </ul>
     </div>
   </div>

@@ -95,8 +95,8 @@ sup { font-size: 70%; line-height: 0; }
 /* help boxes */
 .help { background: var(--gold-soft); border: 0.3mm solid var(--gold-line); border-left: 1.6mm solid var(--gold); border-radius: 1.5mm; padding: 1.8mm 2.5mm 2mm; font-size: 9.4pt; line-height: 1.36; }
 .help .tag { display: inline-block; background: var(--green); color: #fff; font-weight: 700; font-size: 7.5pt; letter-spacing: 0.12em; padding: 0.3mm 1.8mm; border-radius: 0.8mm; margin-bottom: 1mm; }
-.help .row { display: grid; grid-template-columns: 15mm 1fr; gap: 1.5mm; margin-top: 0.8mm; }
-.help .row > b { color: var(--deep); font-size: 8.5pt; padding-top: 0.2mm; }
+.help .row { display: grid; grid-template-columns: 18.5mm 1fr; gap: 1.5mm; margin-top: 0.8mm; }
+.help .row > b { color: var(--deep); font-size: 8.2pt; padding-top: 0.25mm; }
 .help.inline { flex: none; width: 68mm; }
 .help.wide { flex: 1; }
 .help .pics { display: flex; gap: 3mm; align-items: flex-end; }
@@ -236,7 +236,18 @@ svg .key { display: none; }
 .help .row.pics-row { grid-template-columns: 1fr; }
 .part.short .p-text { padding-bottom: 1mm; }
 
-.part.short .p-text { flex: 1; white-space: nowrap; }
-.part.short .ans .line { width: 40mm; }
+.part.short .p-text { flex: 1; }
+.part.short .ans .line { width: 34mm; }
 .part.compact { gap: 1mm; margin-bottom: 1mm; }
 .choice span { white-space: nowrap; }
+/* multiple choice: the HELP tag sits beside its text to save height */
+.help.tagside { display: flex; gap: 2.5mm; align-items: flex-start; padding: 1.6mm 2.5mm; }
+.help.tagside .tag { flex: none; margin: 0.4mm 0 0; }
+.help.tagside .row { margin-top: 0; flex: 1; }
+
+.help.tagside .row { display: block; }
+.help.tagside .row > b { margin-right: 1.5mm; }
+
+.help.wide { flex: none; }
+.help.tagside .row > div { display: inline; }
+.mainfig.end { flex: 1 1 auto; align-items: flex-start; padding-top: 3mm; }
