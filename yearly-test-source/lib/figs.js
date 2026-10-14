@@ -4,6 +4,7 @@ const INK = '#1f2328';
 const SOFT = '#e9eef0';
 const KEY = '#c62828';
 const FS = 3.7; // label size in mm (about 10.5 pt)
+const GRID = '#8a9099'; // dark enough to survive a black-and-white photocopy
 
 const svg = (w, h, body, cls = '') =>
   `<svg class="fig ${cls}" viewBox="0 0 ${w} ${h}" width="${w}mm" height="${h}mm" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
@@ -105,13 +106,11 @@ const histogram = ({ classes, freq, drawn, yMax, xTitle, yTitle, title }) => {
   const y0 = top + yMax * u;
   let s = text(left + plotW / 2, 3.6, title, { bold: true, fs: 3.6 });
   for (let i = 0; i <= yMax; i++) {
-    s += line(left, y0 - i * u, left + plotW, y0 - i * u, { stroke: '#c9ccd1', w: 0.25 });
+    s += line(left, y0 - i * u, left + plotW, y0 - i * u, { stroke: GRID, w: 0.3 });
     s += text(left - 2, y0 - i * u, i, { anchor: 'end', fs: 3.1 });
   }
-  for (let i = 0; i <= classes.length * 2 + 2; i++) {
-    const xx = left + (i * col) / 2;
-    if (xx <= left + plotW) s += line(xx, top, xx, y0, { stroke: '#e1e3e6', w: 0.2 });
-  }
+  // vertical grid lines only at the column edges
+  for (let i = 0; i <= classes.length; i++) s += line(left + gap + i * col, top, left + gap + i * col, y0, { stroke: GRID, w: 0.3 });
   classes.forEach((c, i) => {
     const x = left + gap + i * col;
     const shape = `<rect x="${x}" y="${y0 - freq[i] * u}" width="${col}" height="${freq[i] * u}"`;
@@ -140,7 +139,7 @@ const lineGraph = ({ labels, values, yMax, yStep, xTitle, yTitle, title }) => {
   const W = left + plotW + 3, H = top + plotH + 17, y0 = top + plotH, k = plotH / yMax;
   let s = text(left + plotW / 2, 3.6, title, { bold: true, fs: 3.6 });
   for (let v = 0; v <= yMax; v += yStep) {
-    s += line(left, y0 - v * k, left + plotW, y0 - v * k, { stroke: '#c9ccd1', w: 0.25 });
+    s += line(left, y0 - v * k, left + plotW, y0 - v * k, { stroke: GRID, w: 0.3 });
     s += text(left - 2, y0 - v * k, v, { anchor: 'end', fs: 3.1 });
   }
   const pts = values.map((v, i) => [left + 6 + i * step, y0 - v * k]);
@@ -154,20 +153,21 @@ const lineGraph = ({ labels, values, yMax, yStep, xTitle, yTitle, title }) => {
 
 // Number plane for plotting a straight line. xs: x values to plot (key), f: rule.
 const plane = ({ xMax, yMax, ux, uy, xs, f }) => {
-  const left = 10, top = 5, W = left + xMax * ux + 10, H = top + yMax * uy + 12, y0 = top + yMax * uy;
+  const left = 10, top = 10, W = left + xMax * ux + 10, H = top + yMax * uy + 12, y0 = top + yMax * uy;
   let s = '';
   for (let i = 0; i <= xMax; i++) {
-    s += line(left + i * ux, top, left + i * ux, y0, { stroke: '#c9ccd1', w: 0.25 });
+    s += line(left + i * ux, top, left + i * ux, y0, { stroke: GRID, w: 0.3 });
     s += text(left + i * ux, y0 + 3.8, i, { fs: 3.1 });
   }
   for (let j = 0; j <= yMax; j++) {
-    s += line(left, y0 - j * uy, left + xMax * ux, y0 - j * uy, { stroke: '#c9ccd1', w: 0.25 });
+    s += line(left, y0 - j * uy, left + xMax * ux, y0 - j * uy, { stroke: GRID, w: 0.3 });
     if (j) s += text(left - 2.2, y0 - j * uy, j, { anchor: 'end', fs: 3.1 });
   }
-  s += line(left, y0, left + xMax * ux + 5, y0, { w: 0.55 }) + line(left, y0, left, top - 1, { w: 0.55 });
+  s += line(left, y0, left + xMax * ux + 5, y0, { w: 0.55 }) + line(left, y0, left, top - 4, { w: 0.55 });
+  s += poly([[left, top - 5], [left - 1.2, top - 2.5], [left + 1.2, top - 2.5]], { fill: INK, w: 0.2 });
   s += poly([[left + xMax * ux + 6, y0], [left + xMax * ux + 3.5, y0 - 1.2], [left + xMax * ux + 3.5, y0 + 1.2]], { fill: INK, w: 0.2 });
   s += text(left + xMax * ux + 7.5, y0, '<tspan font-style="italic">x</tspan>', { anchor: 'start', fs: 3.6 });
-  s += text(left + 2.5, top + 0.8, '<tspan font-style="italic">y</tspan>', { anchor: 'start', fs: 3.6 });
+  s += text(left + 2.5, top - 4.2, '<tspan font-style="italic">y</tspan>', { anchor: 'start', fs: 3.6 });
   const P = xs.map((x) => [left + x * ux, y0 - f(x) * uy]);
   s += `<g class="key">${pline(P, { stroke: KEY, w: 0.6 })}${P.map((p) => `<circle cx="${p[0]}" cy="${p[1]}" r="1.1" fill="${KEY}"/>`).join('')}</g>`;
   return svg(W, H, s, 'plane');

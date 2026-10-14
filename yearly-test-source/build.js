@@ -68,7 +68,8 @@ const part = (p, i, many) => {
   if (p.short) return `<div class="part short">${text}${answerLine(p)}</div>`;
   if (p.compact) return `<div class="part fixed compact">${text}${answerLine(p)}</div>`;
   const extra = p.extra || '';
-  if (p.noWork) return `<div class="part fixed">${text}${extra}${p.keyNote ? `<div style="position:relative;height:9mm">${keyNote(p)}</div>` : ''}</div>`;
+  if (p.lines) return `<div class="part fixed">${text}<div class="ans-row">${p.lines.map((l) => answerLine(l)).join('')}</div></div>`;
+  if (p.noWork) return `<div class="part fixed">${text}${extra}${p.keyNote ? `<div class="key knote-flow">${p.keyNote}</div>` : ''}</div>`;
   const work = `<div class="work"><span class="wl">Working</span>${keyNote(p)}</div>`;
   if (p.fig) return `<div class="part">${text}<div class="figwrap">${p.fig}${work}</div>${answerLine(p)}</div>`;
   return `<div class="part">${text}${extra}${work}${answerLine(p)}</div>`;
@@ -206,7 +207,7 @@ const cover = () => `
       <div><span>Teacher</span><i></i></div><div><span>Date</span><i></i></div>
     </div>
     <div class="cv-facts">
-      <div class="fact"><span>Working time</span><b>1 hour 15 min</b><small>+ ${TEST.reading} reading</small></div>
+      <div class="fact"><span>Working time</span><b>1 hour 15 min</b><small>75 minutes</small></div>
       <div class="fact"><span>Total marks</span><b>${TOTAL} marks</b><small>${n} questions</small></div>
       <div class="fact"><span>Calculators</span><b>Allowed</b><small>bring your own</small></div>
       <div class="fact"><span>Bring</span><b>Pen, pencil</b><small>ruler, eraser, calculator</small></div>
@@ -233,7 +234,7 @@ const cover = () => `
       <div class="cv-help">
         <p class="cv-h">Stuck? Look for HELP</p>
         <p style="font-size:9.5pt">Many questions have a <b>HELP</b> box. It gives you the <b>formula</b> and a worked <b>example</b>, like this:</p>
-        ${helpBox({ rows: [['Formula', 'Speed = distance ÷ time'], ['Example', '100 km in 2 hours: 100 ÷ 2 = 50 km/h']] }, '')}
+        ${helpBox({ rows: [['Formula', 'Speed = distance ÷ time'], ['Example', '100 km in 2 hours:<br><span class="nw">100 ÷ 2 = 50 km/h</span>']] }, '')}
       </div>
     </div>
     <div class="cv-stop">Do not turn over until your teacher tells you to start. <span>Good luck!</span></div>
@@ -245,9 +246,10 @@ const plain = (h) => String(h).replace(/<span class="fr"><span>(.*?)<\/span><spa
 const answerSummary = (q) => {
   if (q.type === 'mc') return `${LETTERS[q.answer]} &nbsp;(${q.options[q.answer]})`;
   if (q.table) return `${q.table.rows.slice(1).map((r) => plain(r[3].key)).join(', ')}; surface area ${plain(q.table.total[1].key)}`;
-  if (q.valueTable) return `y = ${q.valueTable.ys.join(', ')}; points plotted and joined`;
+  if (q.valueTable) return `(a) y = ${q.valueTable.ys.join(', ')}<br>(b) points plotted and joined<br>(c) gradient 2, y-intercept 1`;
   return q.parts.map((p, i) => {
-    const v = p.keyText || plain(p.key || (p.keyNote ? 'see guide' : ''));
+    if (p.lines) return `${q.parts.length > 1 ? `(${'abcdef'[i]}) ` : ''}${p.lines.map((l) => `${plain(l.pre)} ${l.key}`).join(', ')}`;
+    const v = p.keyText || plain(p.key || p.keyNote || '');
     const val = `${p.pre && p.pre.startsWith('$') ? '$' : ''}${v}${p.unit ? (p.unit === '%' ? '%' : ` ${p.unit}`) : ''}`;
     return `${q.parts.length > 1 ? `(${'abcdef'[i]}) ` : ''}${val}`;
   }).join('<br>');
@@ -263,7 +265,8 @@ const NOTES = {
   'Mean, median and range': 'Order: 1, 3, 3, 5, 8, 9, 13.',
   'Frequency tables, histograms and shape': '(a) 20  (b) columns of height 3 and 2, touching  (c) 9 ÷ 20 × 100 = 45%  (d) skewed. (c) Follow-through from their total.',
   'Probability': '',
-  'Table of values and graphing a line': '(a) 2 marks: all four correct; 1 mark: two or three correct. (b) Follow-through from their table.',
+  'Table of values and graphing a line': '(a) 1 mark: at least three values correct. (b) Follow-through from their table. (c) 1 mark: both correct.',
+  'Loans': 'Total repaid 60 × 24 = $1440; interest 1440 − 1200 = $240.',
   'Pythagoras’ theorem': '1 mark: 6² + 8² = 100 (or c² = 100). 1 mark: c = 10 cm.',
   'Trigonometry: finding a side': '1 mark: x = 8 × tan 35°. 1 mark: 5.6 cm. (A calculator in radians mode gives 3.8, in gradians mode 4.9: 1 mark for the working.)',
   'Solving equations': 'Accept any correct method, or the answer checked by substitution.',
@@ -308,9 +311,9 @@ const guidePages = () => {
     <div><h1>Reporting</h1><p class="sub">Each section is one content area, so each section total can be reported on its own.</p></div>
     <table class="rep">
       <tr><th>Section</th><th>Content area</th><th>Where it comes from</th><th>Marks</th><th>Share of test</th></tr>
-      ${sections.map((s) => `<tr><td><b>${s.id}</b></td><td><b>${s.title}</b><br>${s.topics}</td><td>${s.source}</td><td>${s.marks}</td><td>${Math.round((s.marks / TOTAL) * 100)}%</td></tr>`).join('')}
-      <tr><td></td><td><b>Chapter reviews and booklets (Sections A–C)</b></td><td>Chapters 1, 2 and 4</td><td><b>${chapterMarks}</b></td><td><b>${Math.round((chapterMarks / TOTAL) * 100)}%</b></td></tr>
-      <tr><td></td><td><b>Rest of the Year 10 syllabus (Section D)</b></td><td>Algebraic techniques, equations, linear relationships, Pythagoras’ theorem, trigonometry</td><td><b>${TOTAL - chapterMarks}</b></td><td><b>${Math.round(((TOTAL - chapterMarks) / TOTAL) * 100)}%</b></td></tr>
+      ${sections.map((s) => `<tr><td><b>${s.id}</b></td><td><b>${s.title}</b><br>${s.topics}</td><td>${s.source}</td><td>${s.marks}</td><td>${((s.marks / TOTAL) * 100).toFixed(1)}%</td></tr>`).join('')}
+      <tr><td></td><td><b>Chapter reviews and booklets (Sections A–C)</b></td><td>Chapters 1, 2 and 4</td><td><b>${chapterMarks}</b></td><td><b>${((chapterMarks / TOTAL) * 100).toFixed(1)}%</b></td></tr>
+      <tr><td></td><td><b>Rest of the Year 10 syllabus (Section D)</b></td><td>Indices, algebraic techniques, equations, linear relationships, Pythagoras’ theorem, trigonometry</td><td><b>${TOTAL - chapterMarks}</b></td><td><b>${(((TOTAL - chapterMarks) / TOTAL) * 100).toFixed(1)}%</b></td></tr>
     </table>
     <p class="cv-h" style="margin-top:1mm">Class record</p>
     <table class="rec">
@@ -325,13 +328,8 @@ const guidePages = () => {
 };
 
 // ---------- assemble ----------
-const doc = (pages, key) => {
-  const total = pages.length;
-  const body = pages.map((p, i) => p.replace('{{PN}}', i + 1).replace('{{PT}}', total)
-    .replace('<section class="page', key && !p.includes('page mg') ? '<section class="page"><div class="keybar">MARKING GUIDE · ANSWERS IN RED</div><section class="pg-inner' : '<section class="page')).join('');
-  return `<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><title>Year 10 ${TEST.title} ${TEST.year}${key ? ' · Marking guide' : ''}</title>
-<style>${css}</style></head><body class="${key ? 'keymode' : ''}">${body}</body></html>`;
-};
+// Superscript ² and ³ in units print small in Lexend, so they become <sup> (outside diagrams).
+const supUnits = (html) => html.split(/(<svg[\s\S]*?<\/svg>)/).map((x, i) => (i % 2 ? x : x.replace(/²/g, '<sup>2</sup>').replace(/³/g, '<sup>3</sup>'))).join('');
 
 // The answer pages keep the test's page numbers, so the key bar is drawn inside the same page box.
 const keyDoc = () => {
@@ -340,11 +338,11 @@ const keyDoc = () => {
   const total = all.length;
   const body = all.map((p, i) => {
     let h = p.replace('{{PN}}', i + 1).replace('{{PT}}', total);
-    if (!p.includes('page mg')) h = h.replace(/<section class="page( extra)?">/, (m) => `${m}<div class="keybar">MARKING GUIDE · ANSWERS IN RED</div>`);
+    if (!p.includes('page mg')) h = h.replace('<br>Kingscliff High School</div>', '<br><span class="keypill">Marking guide · answers in red</span></div>');
     return h;
   }).join('');
   return `<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><title>Year 10 ${TEST.title} ${TEST.year} · Marking guide</title>
-<style>${css}</style></head><body class="keymode">${body}</body></html>`;
+<style>${css}</style></head><body class="keymode">${supUnits(body)}</body></html>`;
 };
 
 const studentDoc = () => {
@@ -352,7 +350,7 @@ const studentDoc = () => {
   const total = all.length;
   const body = all.map((p, i) => p.replace('{{PN}}', i + 1).replace('{{PT}}', total)).join('');
   return `<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><title>Year 10 ${TEST.title} ${TEST.year}</title>
-<style>${css}</style></head><body>${body}</body></html>`;
+<style>${css}</style></head><body>${supUnits(body)}</body></html>`;
 };
 
 // ---------- layout checks (run in the browser) ----------
@@ -370,6 +368,10 @@ const check = () => {
       if (b.bottom > cb.bottom + 1 || b.right > cb.right + 1) out.push(`${pg}: ${el.className.baseVal ?? el.className} runs off the page (q ${el.closest('[data-q]')?.dataset.q || '-'})`);
       const box = el.parentElement.closest('.q');
       if (box) { const pb = r(box); if (b.bottom > pb.bottom + 1 || b.right > pb.right + 1) out.push(`${pg}: ${el.className.baseVal ?? el.className} spills out of question ${box.dataset.q}`); }
+    });
+    p.querySelectorAll('.help').forEach((h) => {
+      const hb = r(h);
+      h.querySelectorAll('.nw, .row > div, .fr').forEach((t) => { if (r(t).right > hb.right + 0.5) out.push(`${pg}: text runs out of a HELP box (q ${h.closest('[data-q]')?.dataset.q || 'cover'}): "${t.textContent.trim().slice(0, 30)}"`); });
     });
     p.querySelectorAll('.q').forEach((q) => {
       if (q.scrollHeight > q.clientHeight + 2) out.push(`${pg}: question ${q.dataset.q} is cut off at the bottom`);

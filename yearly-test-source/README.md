@@ -10,11 +10,11 @@ Builds the Year 10 Mathematics Yearly Test and its marking guide as printable A4
 
 ## The test
 
-- 1 hour 15 minutes, 55 marks, 34 questions, calculators allowed.
+- 1 hour 15 minutes, 55 marks, 35 questions, calculators allowed.
 - 80% (44 marks) from the three Cambridge MATHS GOLD 5.1 chapter reviews in this repository and the Year 10 transition
   booklets: Section A Financial mathematics (15), Section B Measurement (15), Section C Statistics and probability (14).
-- 20% (11 marks) from the rest of the Year 10 syllabus: Section D algebra, equations, straight-line graphs,
-  Pythagoras' theorem and trigonometry.
+- 20% (11 marks) from the rest of the Year 10 syllabus: Section D index laws, substitution, equations (including one
+  with a fraction), straight-line graphs with gradient and y-intercept, Pythagoras' theorem and trigonometry.
 - Trickier questions have a HELP box with the formula and a worked example.
 
 ## Build

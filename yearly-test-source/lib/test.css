@@ -224,7 +224,7 @@ svg .key { display: none; }
 .opt > span:last-child { white-space: nowrap; }
 .opts.c2 .opt > span:last-child { white-space: normal; }
 .mcn .ol { margin-left: 1.5mm; }
-.tbl col.c1 { width: 27%; } .tbl col.c2 { width: 33%; } .tbl col.c3 { width: 17%; } .tbl col.c4 { width: 23%; }
+.tbl col.c1 { width: 25%; } .tbl col.c2 { width: 40%; } .tbl col.c3 { width: 13%; } .tbl col.c4 { width: 22%; }
 .tbl th, .tbl td { height: 11mm; }
 
 .parts-row .ans { justify-content: flex-start; }
@@ -251,3 +251,18 @@ svg .key { display: none; }
 .help.wide { flex: none; }
 .help.tagside .row > div { display: inline; }
 .mainfig.end { flex: 1 1 auto; align-items: flex-start; padding-top: 3mm; }
+
+/* round 2 review */
+.nw { white-space: nowrap; }
+.tbl td .kv { white-space: nowrap; }
+.opt { gap: 1.3mm; }
+.opts { column-gap: 5mm; }
+.keypill { display: inline-block; background: var(--key); color: #fff; font-size: 7.5pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.3mm 2mm; border-radius: 0.8mm; margin-top: 0.4mm; }
+.ans-row { display: flex; justify-content: flex-end; gap: 6mm; margin-top: 2mm; }
+.ans-row .ans .line { width: 26mm; }
+.ans-row .ans .al { display: none; }
+
+.knote-flow { color: var(--key); font-size: 9pt; font-weight: 600; line-height: 1.3; margin: 1mm 0 0 7.5mm; }
+.ans-row { flex-direction: column; align-items: flex-end; gap: 2mm; }
+.ans-row .ans .line { width: 34mm; }
+.ans .line > span:first-child { white-space: nowrap; }
