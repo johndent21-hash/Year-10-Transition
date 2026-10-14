@@ -49,7 +49,7 @@ const mc = (q) => `
   ${head(q)}
   <div class="q-body">
     <div class="opts${q.optCols === 2 ? ' c2' : ''}">${q.options.map((o, i) => `<div class="opt${i === q.answer ? ' right' : ''}"><span class="ol">${LETTERS[i]}</span><span>${o}</span></div>`).join('')}</div>
-    ${helpBox(q.help, q.help && q.help.rows.map((r) => r[1]).join(' ').replace(/<[^>]+>/g, '').length < 70 ? 'inline tagside' : 'inline')}
+    ${helpBox(q.help, `${q.help && q.help.rows.map((r) => r[1]).join(' ').replace(/<[^>]+>/g, '').length < 70 ? 'inline tagside' : 'inline'}${q.optCols !== 2 && q.options.join('').replace(/<[^>]+>/g, '').length > 20 ? ' narrow' : ''}`)}
   </div>
 </div>`;
 
@@ -260,10 +260,10 @@ const NOTES = {
   'Gross and net pay': '(b) Follow-through: accept their (a) − 165.09.',
   'Compound interest': '(b) Follow-through: accept their (a) − 5000. Accept $5624.32 rounded to $5624.',
   'Circumference and area of a circle': 'Also accept 18.85 and 28.27 (2 d.p.), or 18.84 and 28.26 (π ≈ 3.14).',
-  'Surface area of a prism': '1 mark: both rows correct (20, 40 and 8, 16). 1 mark: total 136 cm².',
-  'Volume and capacity of a cylinder': 'Also accept 75.40 or 75. (b) Follow-through: same number as (a), in mL.',
+  'Surface area of a prism': '1 mark: both rows right (20, 40; 8, 16). 1 mark: 136 cm², or the correct sum of their last column.',
+  'Volume and capacity of a cylinder': 'Also accept 75.40, 75, or 75.36 (π ≈ 3.14). (b) Follow-through: same number as (a), in mL.',
   'Mean, median and range': 'Order: 1, 3, 3, 5, 8, 9, 13.',
-  'Frequency tables, histograms and shape': '(a) 20  (b) columns of height 3 and 2, touching  (c) 9 ÷ 20 × 100 = 45%  (d) skewed. (c) Follow-through from their total.',
+  'Frequency tables, histograms and shape': '1 mark each part. (b) 1 mark: both columns correct (heights 3 and 2, touching). (c) 9 ÷ 20 × 100 = 45%; follow-through from their total in (a).',
   'Probability': '',
   'Table of values and graphing a line': '(a) 1 mark: at least three values correct. (b) Follow-through from their table. (c) 1 mark: both correct.',
   'Loans': 'Total repaid 60 × 24 = $1440; interest 1440 − 1200 = $240.',

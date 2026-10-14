@@ -303,7 +303,7 @@ const D = [
     marks: 1, type: 'mc', src: 'Syllabus: Indices', topic: 'Index laws',
     text: 'Simplify &nbsp;<b><i>a</i><sup>3</sup> × <i>a</i><sup>4</sup></b>',
     options: [`<i>a</i><sup>${3 + 4}</sup>`, '<i>a</i><sup>12</sup>', '2<i>a</i><sup>7</sup>', '7<i>a</i>'], answer: 0,
-    help: help(['Remember', `When you multiply, <b>add</b> the powers.<br>${nw('<i>m</i><sup>2</sup> × <i>m</i><sup>5</sup> = <i>m</i><sup>7</sup>')}`]),
+    help: help(['Remember', `When you multiply, <b>add</b> the powers.<br>${nw('<i>m</i><sup>2</sup> × <i>m</i><sup>6</sup> = <i>m</i><sup>8</sup>')}`]),
   },
   {
     marks: 1, type: 'sa', src: 'Syllabus: Algebraic techniques', topic: 'Substitution',
@@ -334,7 +334,7 @@ const D = [
       { text: 'Write the <b>gradient</b> and the <b><i>y</i>-intercept</b> of <i>y</i> = 2<i>x</i> + 1.', marks: 1, showMarks: true, lines: [{ pre: 'Gradient =', key: '2' }, { pre: '<i>y</i>-intercept =', key: '1' }], keyNote: '1 mark: both correct.' },
     ],
     help: help(['Example', `For <i>y</i> = 3<i>x</i> + 2, when <i>x</i> = 4:<br>${nw('<i>y</i> = 3 × 4 + 2 = 14')}`],
-      ['Plot', 'For <i>x</i> = 1 and <i>y</i> = 3: go across to 1, then up to 3. Put a dot. Join the dots with a ruler.'],
+      ['Plot', 'For <i>x</i> = 4 and <i>y</i> = 9: go across to 4, then up to 9. Put a dot. Join the dots with a ruler.'],
       ['<i>y</i> = <i>mx</i> + <i>c</i>', '<i>m</i> is the gradient (how steep the line is). <i>c</i> is the <i>y</i>-intercept (where the line crosses the <i>y</i>-axis).']),
   },
   {

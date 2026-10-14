@@ -266,3 +266,7 @@ svg .key { display: none; }
 .ans-row { flex-direction: column; align-items: flex-end; gap: 2mm; }
 .ans-row .ans .line { width: 34mm; }
 .ans .line > span:first-child { white-space: nowrap; }
+
+/* multiple choice: a narrower help box leaves room for four options, so every box lines up */
+.help.inline.narrow { width: 60mm; }
+.mg-table td { padding-top: 0.8mm; padding-bottom: 0.8mm; }
