@@ -45,7 +45,7 @@
 .rv-cover .cv-title p { font-size: 12pt; }
 .rv-how .cv-steps { flex-direction: row; gap: 4mm; }
 .rv-how .cv-steps li { flex: 1; }
-.rv-keyt { font-size: 8.5pt; font-weight: 600; color: var(--muted); letter-spacing: 0; text-transform: none; margin-left: 4mm; }
+.rv-keyt { display: none; font-size: 8.5pt; font-weight: 600; color: var(--muted); letter-spacing: 0; text-transform: none; margin-left: 4mm; }
 .rv-keyt i, .rv-check td.tk i { display: inline-block; width: 3.6mm; height: 3.6mm; border: 0.35mm solid var(--ink); border-radius: 0.6mm; vertical-align: -0.6mm; }
 .rv-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 6mm; }
 .rv-check table { width: 100%; font-size: 9.5pt; }
@@ -66,3 +66,36 @@
 .rv-tips ul { margin: 0; padding-left: 5mm; font-size: 9.8pt; line-height: 1.38; }
 
 .rv-card strong { font-weight: 600; color: var(--deep); }
+
+/* round 2: labelled answer lines, figures beside practice questions, checklist heads, answers */
+.rv-a.multi { flex-wrap: wrap; justify-content: flex-end; gap: 1mm 4mm; }
+.rv-al { display: inline-flex; align-items: flex-end; gap: 1.2mm; white-space: nowrap; }
+.rv-a.multi .ln { width: 20mm; }
+.rv-qfig { margin-top: 1mm; }
+.rv-qfig .rv-sl { font-size: 9.5pt; }
+.rv-qfig svg.mini { height: 13mm; width: auto; }
+.rv-vt { border-collapse: collapse; font-size: 10pt; }
+.rv-vt th, .rv-vt td { border: 0.3mm solid #8d9196; width: 9mm; height: 7mm; text-align: center; }
+.rv-vt th { background: var(--soft); }
+.rv-check th { font-size: 7.5pt; font-weight: 600; color: var(--muted); text-align: center; padding: 0 0 0.4mm; }
+.rv-ans li span { display: block; }
+.rv-sl th { font-size: 8pt; color: var(--muted); font-weight: 600; padding: 0 2mm 0.5mm; text-align: left; }
+
+/* round 2 fit: two practice columns, labelled answer lines side by side, small figures beside the question */
+.rv-q { font-size: 9.8pt; line-height: 1.3; }
+.rv-a .ln { width: 28mm; }
+.rv-a.multi { flex-direction: row; flex-wrap: nowrap; gap: 4mm; }
+.rv-a.multi .ln { width: 20mm; }
+.rv-qt.hasfig { display: flex; gap: 3mm; align-items: flex-start; }
+.rv-qt.hasfig .rv-qfig { margin-top: 0; flex: none; }
+.rv-card { font-size: 9.3pt; line-height: 1.32; padding: 1.6mm 2.4mm 1.8mm; }
+.rv-grid { gap: 2mm; }
+.rv-ans li span.wk::before { content: "— "; }
+.rv-check th { white-space: nowrap; font-size: 7pt; }
+.rv-check td.tk { width: 12mm; }
+.rv-check td { padding: 0.65mm 1mm; }
+.rv-cover .cv-logo { width: 62mm; }
+.rv-cover .cv-title h1 { font-size: 27pt; }
+.rv-cover .content { gap: 2.8mm; }
+.rv-ans li span { display: inline; }
+.rv-qs { row-gap: 1.2mm; }
