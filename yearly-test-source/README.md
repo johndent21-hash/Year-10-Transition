@@ -7,6 +7,7 @@ Builds the Year 10 Mathematics Yearly Test and its marking guide as printable A4
 |---|---|
 | `Year10-Transition-Yearly-Test.pdf` | The student test: cover page, Sections A to D, and an extra working page (14 pages) |
 | `Year10-Transition-Yearly-Test-Marking-Guide.pdf` | Answer summary with marking notes, a reporting page and class record, then the test with answers in red |
+| `Year10-Transition-Yearly-Test-Revision.pdf` | Six-page student revision booklet: cover and checklist, one page of key ideas and practice per section, answers |
 
 ## The test
 
@@ -25,7 +26,7 @@ You need Node.js and Playwright (`npm install playwright && npx playwright insta
 node build.js
 ```
 
-This writes both PDFs into `../Yearly test/` and checks the layout of every page: it prints a warning if anything
+`node revision.js` builds the revision booklet the same way. This writes the PDFs into `../Yearly test/` and checks the layout of every page: it prints a warning if anything
 overflows a page, spills out of its box, or leaves less than 14 mm of working space. `node build.js --shots <dir>`
 also saves a PNG of every page.
 
@@ -38,3 +39,5 @@ also saves a PNG of every page.
 - `lib/test.css` is the page design: the gold-and-green Year 10 transition colours and the Lexend font. Answers
   (class `key`) only show in the marking guide.
 - `build.js` lays out the cover, section pages and marking guide, then prints them to PDF.
+- `revision.js` holds the revision booklet: key ideas, worked examples and practice questions (different numbers from
+  the test), with answers calculated in the same file. Its extra styles are in `lib/revision.css`.
